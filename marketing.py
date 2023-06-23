@@ -81,7 +81,7 @@ class Message(metaclass=PoolMeta):
         for message in messages:
             message.update_content()
         cls.save(messages)
-        super().send_test(messages)
+        return super().send_test(messages)
 
     @classmethod
     @ModelView.button
