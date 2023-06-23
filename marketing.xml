@@ -1,0 +1,15 @@
+<tryton>
+    <data>
+        <record model="ir.ui.view" id="email_message_view_form">
+            <field name="model">marketing.email.message</field>
+	    <field name="inherit" ref="marketing_email.email_message_view_form"/>
+            <field name="name">email_message_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="email_message_view_list">
+            <field name="model">marketing.email.message</field>
+	    <field name="inherit" ref="marketing_email.email_message_view_list"/>
+            <field name="name">email_message_list</field>
+        </record>
+    </data>
+</tryton>
