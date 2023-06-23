@@ -48,7 +48,6 @@ class Message(metaclass=PoolMeta):
             self.content = document[1]
         else:
             self.content = ''
-        print(self.content)
 
     @classmethod
     def create(cls, vlist):
@@ -68,3 +67,26 @@ class Message(metaclass=PoolMeta):
                     message.update_content()
             cls.save(messages)
 
+    @classmethod
+    @ModelView.button
+    def draft(cls, messages):
+        for message in messages:
+            message.update_content()
+        cls.save(messages)
+        super().draft(messages)
+
+    @classmethod
+    @ModelView.button
+    def send_test(cls, messages):
+        for message in messages:
+            message.update_content()
+        cls.save(messages)
+        super().send_test(messages)
+
+    @classmethod
+    @ModelView.button
+    def send(cls, messages):
+        for message in messages:
+            message.update_content()
+        cls.save(messages)
+        super().send(messages)
