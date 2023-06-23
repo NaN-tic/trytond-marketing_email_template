@@ -50,10 +50,6 @@ class Message(metaclass=PoolMeta):
             self.content = ''
         print(self.content)
 
-    @fields.depends(methods=['update_content'])
-    def on_change_with_content(self):
-        self.update_content()
-
     @classmethod
     def create(cls, vlist):
         messages = super().create(vlist)
