@@ -32,7 +32,6 @@ class Message(metaclass=PoolMeta):
 
         if not self.template:
             self.content = self.html
-            print(self.content)
             return
 
         data = {
