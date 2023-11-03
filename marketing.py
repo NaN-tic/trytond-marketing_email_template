@@ -3,6 +3,32 @@ from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import PoolMeta, Pool
 
 
+class SendTest(metaclass=PoolMeta):
+    __name__ = 'marketing.email.send_test'
+
+    def default_start(self, fields):
+        pool = Pool()
+        List = pool.get('marketing.email.list')
+
+        defaults = super().default_start(fields)
+        email_list = defaults.get('list_')
+        if email_list:
+            email_list = List(email_list)
+            if email_list.default_test_email:
+                defaults['email'] = email_list.default_test_email.id
+        return defaults
+
+
+class EmailList(metaclass=PoolMeta):
+    __name__ = 'marketing.email.list'
+
+    default_from = fields.Char('Default From')
+    default_test_email = fields.Many2One('marketing.email',
+        'Default Test E-mail')
+    default_template = fields.Many2One('ir.action.report', 'Template', domain=[
+            ('single', '=', True),
+            ('model', '=', 'marketing.email.message'),
+            ])
 
 
 class Message(metaclass=PoolMeta):
@@ -13,6 +39,15 @@ class Message(metaclass=PoolMeta):
             ])
     markdown = fields.Text('Markdown')
     html = fields.Function(fields.Text('HTML'), 'get_html')
+
+    @fields.depends('list_', 'from_', 'template')
+    def on_change_list_(self):
+        if not self.list_:
+            return
+        if not self.from_:
+            self.from_ = self.list_.default_from
+        if not self.template:
+            self.template = self.list_.default_template
 
     def get_html(self, name):
         if not self.markdown:

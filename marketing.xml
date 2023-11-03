@@ -2,14 +2,19 @@
     <data>
         <record model="ir.ui.view" id="email_message_view_form">
             <field name="model">marketing.email.message</field>
-	    <field name="inherit" ref="marketing_email.email_message_view_form"/>
+            <field name="inherit" ref="marketing_email.email_message_view_form"/>
             <field name="name">email_message_form</field>
         </record>
-
         <record model="ir.ui.view" id="email_message_view_list">
             <field name="model">marketing.email.message</field>
-	    <field name="inherit" ref="marketing_email.email_message_view_list"/>
+            <field name="inherit" ref="marketing_email.email_message_view_list"/>
             <field name="name">email_message_list</field>
+        </record>
+
+        <record model="ir.ui.view" id="email_list_view_form">
+            <field name="model">marketing.email.list</field>
+            <field name="inherit" ref="marketing_email.email_list_view_form"/>
+            <field name="name">email_list_form</field>
         </record>
     </data>
 </tryton>

@@ -1,0 +1,11 @@
+<data>
+    <xpath expr="//field[@name='language']" position="after">
+        <separator string="Defaults" id="defaults" colspan="4"/>
+        <label name="default_from"/>
+        <field name="default_from"/>
+        <label name="default_test_email"/>
+        <field name="default_test_email"/>
+        <label name="default_template"/>
+        <field name="default_template"/>
+    </xpath>
+</data>
