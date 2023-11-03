@@ -3,11 +3,6 @@ from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import PoolMeta, Pool
 
 
-class Template(ModelSQL, ModelView):
-    'Email Template'
-    __name__ = 'marketing.email.template'
-    name = fields.Char('Name', required=True)
-    content = fields.Text('Content', required=True)
 
 
 class Message(metaclass=PoolMeta):
