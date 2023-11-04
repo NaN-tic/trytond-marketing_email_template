@@ -1,6 +1,7 @@
 import markdown
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import PoolMeta, Pool
+from trytond.pyson import Eval
 
 
 class SendTest(metaclass=PoolMeta):
@@ -24,7 +25,9 @@ class EmailList(metaclass=PoolMeta):
 
     default_from = fields.Char('Default From')
     default_test_email = fields.Many2One('marketing.email',
-        'Default Test E-mail')
+        'Default Test E-mail', domain=[
+            ('list_', '=', Eval('id', -1)),
+            ])
     default_template = fields.Many2One('ir.action.report', 'Template', domain=[
             ('single', '=', True),
             ('model', '=', 'marketing.email.message'),
