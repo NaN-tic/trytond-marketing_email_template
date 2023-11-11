@@ -6,6 +6,7 @@ from . import marketing
 
 def register():
     Pool.register(
+        marketing.Email,
         marketing.EmailList,
         marketing.Message,
         module='marketing_email_template', type_='model')

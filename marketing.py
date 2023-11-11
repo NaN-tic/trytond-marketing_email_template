@@ -1,5 +1,5 @@
 import markdown
-from trytond.model import ModelView, ModelSQL, fields
+from trytond.model import ModelView, fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
 
@@ -32,6 +32,16 @@ class EmailList(metaclass=PoolMeta):
             ('single', '=', True),
             ('model', '=', 'marketing.email.message'),
             ])
+
+
+class Email(metaclass=PoolMeta):
+    __name__ = 'marketing.email'
+
+    new = fields.Boolean('New')
+
+    @staticmethod
+    def default_new():
+        return True
 
 
 class Message(metaclass=PoolMeta):
@@ -122,3 +132,24 @@ class Message(metaclass=PoolMeta):
             message.update_content()
         cls.save(messages)
         super().send(messages)
+
+    @classmethod
+    def process(cls, messages=None, emails=None, smptd_datamanager=None):
+        pool = Pool()
+        Email = pool.get('marketing.email')
+
+        super().process(messages, emails, smptd_datamanager)
+        if messages is None:
+            messages = cls.search([ 
+                    ('state', '=', 'sending'),  
+                    ])
+
+        if not emails:
+            emails = []
+            for message in messages:
+                emails += message.list_.emails
+
+        emails = [x for x in emails if x.new]
+        for email in emails:
+            email.new = False
+        Email.save(emails)
