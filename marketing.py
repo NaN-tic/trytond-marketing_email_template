@@ -1,7 +1,11 @@
-import markdown
+import markdown, re
 from trytond.model import ModelView, fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
+from trytond.modules.widgets import tools
+from trytond.config import config
+
+IMAGE_URL = config.get('image', 'source', default='')
 
 
 class SendTest(metaclass=PoolMeta):
@@ -52,6 +56,7 @@ class Message(metaclass=PoolMeta):
             ])
     markdown = fields.Text('Markdown')
     html = fields.Function(fields.Text('HTML'), 'get_html')
+    content_block = fields.Text('EditorJS')
 
     @fields.depends('list_', 'from_', 'template')
     def on_change_list_(self):
@@ -63,13 +68,24 @@ class Message(metaclass=PoolMeta):
             self.template = self.list_.default_template
 
     def get_html(self, name):
-        if not self.markdown:
-            return ''
-        html = markdown.markdown(self.markdown)
-        html = '<html><body>%s</body></html>' % html
-        return html
+        if len(self.content_block) < 1:
+            html = markdown.markdown(self.markdown)
+            html = '<html><body>%s</body></html>' % html
+            return html
+        else:
+            html = tools.js_to_html(self.content_block, url=IMAGE_URL)
+            return html
+    '''
+    #Print functions for debugging:
+    @fields.depends('content_block')
+    def on_change_content_block(self):
+        print(tools.js_to_html(self.content_block, url=EMAIL_BASE))
 
-    @fields.depends('template', 'markdown')
+    @fields.depends('markdown')
+    def on_change_markdown(self):
+        print(tools.text_to_js(self.markdown))
+    '''
+    @fields.depends('template', 'markdown', 'content_block')
     def update_content(self):
         pool = Pool()
 
@@ -88,6 +104,7 @@ class Message(metaclass=PoolMeta):
         document = Report.execute([self.id], data)
         if document:
             self.content = document[1]
+            self.content = re.sub('<br>', '<br />', self.content)
         else:
             self.content = ''
 
@@ -104,7 +121,7 @@ class Message(metaclass=PoolMeta):
         super().write(*args)
         actions = iter(args)
         for messages, values in zip(actions, actions):
-            if 'template' in values or 'markdown' in values:
+            if 'template' in values or 'markdown' in values or 'content_block' in values:
                 for message in messages:
                     message.update_content()
             cls.save(messages)
@@ -121,7 +138,7 @@ class Message(metaclass=PoolMeta):
     @ModelView.button
     def send_test(cls, messages):
         for message in messages:
-            message.update_content()
+            message.update_content()           
         cls.save(messages)
         return super().send_test(messages)
 
@@ -140,8 +157,8 @@ class Message(metaclass=PoolMeta):
 
         super().process(messages, emails, smptd_datamanager)
         if messages is None:
-            messages = cls.search([ 
-                    ('state', '=', 'sending'),  
+            messages = cls.search([
+                    ('state', '=', 'sending'),
                     ])
 
         if not emails:
