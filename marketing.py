@@ -138,7 +138,7 @@ class Message(metaclass=PoolMeta):
     @ModelView.button
     def send_test(cls, messages):
         for message in messages:
-            message.update_content()           
+            message.update_content()
         cls.save(messages)
         return super().send_test(messages)
 
