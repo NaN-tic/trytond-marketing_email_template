@@ -6,7 +6,7 @@ from trytond.modules.widgets import tools
 from trytond.config import config
 
 IMAGE_URL = config.get('image', 'source', default='')
-
+TRYTOND_MARKETING_EMAIL_BASE = config.get('email', 'uri', default='')
 
 class SendTest(metaclass=PoolMeta):
     __name__ = 'marketing.email.send_test'
@@ -68,23 +68,14 @@ class Message(metaclass=PoolMeta):
             self.template = self.list_.default_template
 
     def get_html(self, name):
-        if len(self.content_block) < 1:
+        if not self.markdown:
             html = markdown.markdown(self.markdown)
             html = '<html><body>%s</body></html>' % html
             return html
         else:
-            html = tools.js_to_html(self.content_block, url=IMAGE_URL)
+            html = tools.js_to_html(self.content_block, url=TRYTOND_MARKETING_EMAIL_BASE)
             return html
-    '''
-    #Print functions for debugging:
-    @fields.depends('content_block')
-    def on_change_content_block(self):
-        print(tools.js_to_html(self.content_block, url=EMAIL_BASE))
 
-    @fields.depends('markdown')
-    def on_change_markdown(self):
-        print(tools.text_to_js(self.markdown))
-    '''
     @fields.depends('template', 'markdown', 'content_block')
     def update_content(self):
         pool = Pool()
