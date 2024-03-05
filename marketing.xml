@@ -27,5 +27,10 @@
             <field name="inherit" ref="marketing_email.email_view_list"/>
             <field name="name">email_list</field>
         </record>
+        <record model="ir.ui.view" id="block_view_form">
+            <field name="model">marketing.email.message</field>
+            <field name="inherit" ref="marketing_email.email_message_view_form"/>
+            <field name="name">block_view</field>
+        </record>
     </data>
 </tryton>
