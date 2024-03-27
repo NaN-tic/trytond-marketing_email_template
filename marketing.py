@@ -68,13 +68,14 @@ class Message(metaclass=PoolMeta):
             self.template = self.list_.default_template
 
     def get_html(self, name):
-        if not self.markdown:
+        if self.content_block:
+            html = tools.js_to_html(self.content_block, url=TRYTOND_MARKETING_EMAIL_BASE)
+            return html
+        elif self.markdown:
             html = markdown.markdown(self.markdown)
             html = '<html><body>%s</body></html>' % html
             return html
-        else:
-            html = tools.js_to_html(self.content_block, url=TRYTOND_MARKETING_EMAIL_BASE)
-            return html
+        return ''
 
     @fields.depends('template', 'markdown', 'content_block')
     def update_content(self):
