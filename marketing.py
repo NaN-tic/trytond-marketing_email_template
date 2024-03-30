@@ -69,7 +69,8 @@ class Message(metaclass=PoolMeta):
 
     def get_html(self, name):
         if self.content_block:
-            html = tools.js_to_html(self.content_block, url=TRYTOND_MARKETING_EMAIL_BASE)
+            html = tools.js_to_html(self.content_block,
+                url_prefix=TRYTOND_MARKETING_EMAIL_BASE)
             return html
         elif self.markdown:
             html = markdown.markdown(self.markdown)
