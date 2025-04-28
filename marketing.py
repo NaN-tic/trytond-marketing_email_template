@@ -2,11 +2,10 @@ import markdown, re
 from trytond.model import ModelView, fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
-from trytond.modules.widgets import tools
 from trytond.config import config
 
 IMAGE_URL = config.get('image', 'source', default='')
-TRYTOND_MARKETING_EMAIL_BASE = config.get('email', 'uri', default='')
+
 
 class SendTest(metaclass=PoolMeta):
     __name__ = 'marketing.email.send_test'
@@ -56,7 +55,6 @@ class Message(metaclass=PoolMeta):
             ])
     markdown = fields.Text('Markdown')
     html = fields.Function(fields.Text('HTML'), 'get_html')
-    content_block = fields.Text('EditorJS')
 
     @fields.depends('list_', 'from_', 'template')
     def on_change_list_(self):
@@ -72,13 +70,9 @@ class Message(metaclass=PoolMeta):
             html = markdown.markdown(self.markdown)
             html = '<html><body>%s</body></html>' % html
             return html
-        if self.content_block:
-            html = tools.js_to_html(self.content_block,
-                url_prefix=TRYTOND_MARKETING_EMAIL_BASE)
-            return html
         return ''
 
-    @fields.depends('template', 'markdown', 'content_block')
+    @fields.depends('template', 'markdown')
     def update_content(self):
         pool = Pool()
 
@@ -114,7 +108,7 @@ class Message(metaclass=PoolMeta):
         super().write(*args)
         actions = iter(args)
         for messages, values in zip(actions, actions):
-            if 'template' in values or 'markdown' in values or 'content_block' in values:
+            if 'template' in values or 'markdown' in values:
                 for message in messages:
                     message.update_content()
             cls.save(messages)
