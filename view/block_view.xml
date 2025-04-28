@@ -1,8 +1,0 @@
-<data>
-    <xpath expr="/form/notebook/page[@name='content']" position="before">
-        <page name="content_block">
-            <separator name="content_block" colspan="4"/>
-                <field name="content_block" widget="block" height="500"/>
-        </page>
-    </xpath>
-</data>
