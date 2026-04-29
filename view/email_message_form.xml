@@ -4,7 +4,10 @@
             <label name="template"/>
             <field name="template"/>
             <separator name="markdown" colspan="4"/>
-            <field name="markdown" colspan="4" height="500"/>
+            <group id="markdown_content" col="2" colspan="4" xexpand="1">
+                <field name="markdown" colspan="1" height="500"/>
+                <field name="preview" colspan="1" height="500" widget="document"/>
+            </group>
         </page>
     </xpath>
 </data>
