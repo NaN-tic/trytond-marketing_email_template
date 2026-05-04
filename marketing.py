@@ -196,7 +196,7 @@ class Message(metaclass=PoolMeta):
             return ''
         return re.sub('<br>', '<br />', document[1])
 
-    @fields.depends('template', 'markdown', 'content', 'list_')
+    @fields.depends('title', 'template', 'markdown', 'content', 'list_')
     def on_change_with_preview(self, name=None):
         content = self._get_rendered_content(use_current_values=True)
         if not content:
