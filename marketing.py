@@ -6,8 +6,7 @@ from trytond.modules.html_report.engine import DualRecord
 from trytond.model import ModelView, fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Bool, Eval
-from trytond.config import config
-
+import trytond.config as config
 IMAGE_URL = config.get('image', 'source', default='')
 PREVIEW_EMAIL = 'user@example.com'
 PREVIEW_EMAIL_TOKEN = 'preview-token'
