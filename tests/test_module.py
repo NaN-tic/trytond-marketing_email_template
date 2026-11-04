@@ -31,10 +31,10 @@ class MarketingEmailTemplateTestCase(ModuleTestCase):
         self.assertIn(b'user@example.com', preview)
 
     @with_transaction()
-    def test_content_is_readonly_when_template_is_set(self):
+    def test_content_is_not_editable_when_template_is_set(self):
         Message = Pool().get('marketing.email.message')
 
-        self.assertIn('template', str(Message.content.states['readonly']))
+        self.assertIn('template', str(Message.content.states['editable']))
 
     @with_transaction()
     def test_preview_keeps_utf8_without_template(self):
