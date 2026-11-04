@@ -147,8 +147,8 @@ class Message(metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super().__setup__()
-        readonly = cls.content.states.get('readonly', False)
-        cls.content.states['readonly'] = readonly | Bool(Eval('template'))
+        editable = cls.content.states.get('editable', True)
+        cls.content.states['editable'] = editable & ~Bool(Eval('template'))
 
     @fields.depends('list_', 'from_', 'template')
     def on_change_list_(self):
